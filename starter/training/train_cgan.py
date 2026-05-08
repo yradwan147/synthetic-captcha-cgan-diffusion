@@ -51,13 +51,6 @@ def train_cgan(
             f"[Epoch {epoch+1}/{epochs}] D loss: {d_loss.item():.4f} | G loss: {g_loss.item():.4f}"
         )
 
-        # Save checkpoint every 10 epochs
-        if (epoch + 1) % 10 == 0:
-            torch.save(
-                generator.state_dict(), f"../pytorch-docker-env/checkpoints{epoch+1}.pt"
-            )
-            torch.save(
-                discriminator.state_dict(),
-                f"../pytorch-docker-env/checkpoints{epoch+1}.pt",
-            )
-            print(f"Saved checkpoints at epoch {epoch+1}")
+        # The cGAN notebook drives its own per-block save_checkpoint() calls,
+        # so this in-loop save was redundant (and was writing to a broken
+        # path that overwrote the generator with the discriminator).
